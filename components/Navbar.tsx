@@ -2,13 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { Sun, Moon } from "lucide-react";
-import useTheme from "@/hooks/useTheme";
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -35,7 +32,7 @@ export default function Navbar() {
   return (
     <>
       <nav ref={navRef} className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/5 rounded-full px-12 py-4 flex items-center gap-12 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
+        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-xs border border-black/5 dark:border-white/5 rounded-full px-30 py-4 flex items-center gap-20 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
           <div className="text-neutral-900 dark:text-white font-bold tracking-tighter cursor-pointer text-xl hover:text-green-600 dark:hover:text-green-400 transition-colors" onClick={() => scrollTo("hero")}>
             MP.
           </div>
@@ -48,13 +45,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
-              onClick={toggleTheme}
-              className="text-neutral-600 dark:text-neutral-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-
             <button 
               className="md:hidden text-neutral-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
               onClick={() => setIsOpen(true)}

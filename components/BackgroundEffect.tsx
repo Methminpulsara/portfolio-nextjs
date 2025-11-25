@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/unsupported-syntax */
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
 
 export default function BackgroundEffect() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,78 +14,92 @@ export default function BackgroundEffect() {
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let particles: Particle[] = [];
-
+    
+    // Ripple properties
+    const ripples: { x: number; y: number; radius: number; alpha: number; speed: number }[] = [];
+    
     canvas.width = width;
     canvas.height = height;
 
-    class Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
-
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5;
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (this.x > width) this.x = 0;
-        if (this.x < 0) this.x = width;
-        if (this.y > height) this.y = 0;
-        if (this.y < 0) this.y = height;
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.fillStyle = `rgba(16, 185, 129, ${this.opacity})`; // Green-500
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    const init = () => {
-      particles = [];
-      for (let i = 0; i < 50; i++) {
-        particles.push(new Particle());
-      }
+    const createRipple = (x: number, y: number) => {
+      ripples.push({
+        x,
+        y,
+        radius: 1,
+        alpha: 0.8,
+        speed: 2
+      });
     };
 
     const animate = () => {
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
-      particles.forEach((particle) => {
-        particle.update();
-        particle.draw();
-      });
+
+      // Draw ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        r.radius += r.speed;
+        r.alpha -= 0.01;
+
+        if (r.alpha <= 0) {
+          ripples.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(16, 185, 129, ${r.alpha})`; // Green-500
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Inner ripple for more "water" feel
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius * 0.7, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(16, 185, 129, ${r.alpha * 0.5})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
       requestAnimationFrame(animate);
     };
 
-    init();
     animate();
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // Create ripple on move, but limit frequency slightly if needed
+      // For now, every move creates a ripple for smooth trail
+      createRipple(e.clientX, e.clientY);
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      // Big ripple on click
+      for(let i=0; i<3; i++) {
+        setTimeout(() => {
+           ripples.push({
+            x: e.clientX,
+            y: e.clientY,
+            radius: 1,
+            alpha: 1.0,
+            speed: 2 + i
+          });
+        }, i * 100);
+      }
+    };
 
     const handleResize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      init();
     };
 
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("click", handleClick);
     window.addEventListener("resize", handleResize);
 
     return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("click", handleClick);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -95,7 +107,7 @@ export default function BackgroundEffect() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none opacity-20"
+      className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen"
     />
   );
 }

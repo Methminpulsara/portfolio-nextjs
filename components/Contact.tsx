@@ -71,7 +71,7 @@ export default function Contact() {
             HELLO.
           </h2>
           <p className="contact-text-reveal text-xl md:text-2xl text-neutral-400 max-w-md leading-relaxed">
-            Have a project in mind? Let's build something amazing together.
+            Have a project in mind? Let&apos;s build something amazing together.
             Reach out for collaborations or just to say hi.
           </p>
           

@@ -96,7 +96,7 @@ export default function HorizontalScroll() {
         </div>
 
         {/* Projects Container - Added gap and adjusted layout */}
-        <div ref={sectionRef} className="flex gap-12 md:gap-24  px-6 md:px-12 h-[65vh] w-full items-center mt-20">
+        <div ref={sectionRef} className="flex pt-5 gap-12 md:gap-24  px-6 md:px-12 h-[65vh] w-full items-center mt-20">
           {projects.map((project) => (
             <div key={project.id} className="project-card-container h-full">
               <ProjectCard project={project} />

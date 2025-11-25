@@ -9,6 +9,7 @@ export interface Project {
   year: string;
 }
 
+
 export interface Skill {
   name: string;
   category: string;
