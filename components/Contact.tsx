@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
@@ -13,16 +12,33 @@ export default function Contact() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".contact-reveal", {
+      // Staggered reveal for text content
+      gsap.from(".contact-text-reveal", {
         y: 50,
         opacity: 0,
         duration: 1,
-        stagger: 0.2,
+        stagger: 0.1,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 70%",
         }
       });
+
+      // Staggered reveal for form inputs
+      gsap.from(".contact-form-reveal", {
+        x: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.3,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
+        }
+      });
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -44,65 +60,75 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" ref={containerRef} className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white px-6 py-24 flex items-center">
-      <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-24">
-        <div>
-          <h2 className="contact-reveal text-[10vw] leading-none font-black tracking-tighter mb-8 text-neutral-900 dark:text-white">
+    <section id="contact" ref={containerRef} className="min-h-screen bg-black text-white px-6 py-32 flex items-center relative overflow-hidden">
+      {/* Background Gradient Accent */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-16 md:gap-32 relative z-10">
+        {/* Left Column: Text Info */}
+        <div className="flex flex-col justify-center">
+          <h2 className="contact-text-reveal text-[12vw] md:text-[8vw] leading-[0.9] font-black tracking-tighter mb-8 text-white">
             HELLO.
           </h2>
-          <p className="contact-reveal text-xl text-neutral-600 dark:text-neutral-400 max-w-md">
+          <p className="contact-text-reveal text-xl md:text-2xl text-neutral-400 max-w-md leading-relaxed">
             Have a project in mind? Let's build something amazing together.
             Reach out for collaborations or just to say hi.
           </p>
           
-          <div className="contact-reveal mt-12 space-y-4">
-            <a href="mailto:info@methminpulsara.dev" className="block text-2xl hover:text-violet-500 transition-colors">
+          <div className="contact-text-reveal mt-16 space-y-6">
+            <a href="mailto:info@methminpulsara.dev" className="block text-2xl md:text-3xl font-light hover:text-green-400 transition-colors">
               info@methminpulsara.dev
             </a>
-            <p className="text-neutral-500">+94 XX XXX XXXX</p>
+            <p className="text-neutral-500 font-mono text-lg">+94 XX XXX XXXX</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="contact-reveal space-y-8 mt-12 md:mt-0">
-          <div className="group relative">
+        {/* Right Column: Form */}
+        <form onSubmit={handleSubmit} className="space-y-10 mt-12 md:mt-0 flex flex-col justify-center">
+          <div className="contact-form-reveal group relative">
             <input
               type="text"
               required
               value={formState.name}
               onChange={(e) => setFormState({...formState, name: e.target.value})}
-              className="w-full bg-transparent border-b border-neutral-300 dark:border-neutral-800 py-4 text-xl focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-transparent border-b border-neutral-800 py-6 text-xl md:text-2xl text-white focus:outline-none focus:border-green-500 transition-colors placeholder:text-neutral-700"
               placeholder="Your Name"
             />
           </div>
-          <div className="group relative">
+          <div className="contact-form-reveal group relative">
             <input
               type="email"
               required
               value={formState.email}
               onChange={(e) => setFormState({...formState, email: e.target.value})}
-              className="w-full bg-transparent border-b border-neutral-300 dark:border-neutral-800 py-4 text-xl focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-transparent border-b border-neutral-800 py-6 text-xl md:text-2xl text-white focus:outline-none focus:border-green-500 transition-colors placeholder:text-neutral-700"
               placeholder="Your Email"
             />
           </div>
-          <div className="group relative">
+          <div className="contact-form-reveal group relative">
             <textarea
               required
               rows={4}
               value={formState.message}
               onChange={(e) => setFormState({...formState, message: e.target.value})}
-              className="w-full bg-transparent border-b border-neutral-300 dark:border-neutral-800 py-4 text-xl focus:outline-none focus:border-violet-500 transition-colors resize-none"
+              className="w-full bg-transparent border-b border-neutral-800 py-6 text-xl md:text-2xl text-white focus:outline-none focus:border-green-500 transition-colors resize-none placeholder:text-neutral-700"
               placeholder="Message"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex items-center gap-3 px-8 py-4 bg-black text-white dark:bg-white dark:text-black rounded-full font-bold hover:bg-violet-500 hover:text-white dark:hover:bg-violet-500 dark:hover:text-white transition-all duration-300 disabled:opacity-50"
-          >
-            {isSubmitting ? "SENDING..." : isSent ? "SENT!" : "SEND MESSAGE"}
-            {!isSubmitting && !isSent && <Send className="w-4 h-4" />}
-          </button>
+          <div className="contact-form-reveal pt-8">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="group relative px-10 py-5 bg-transparent border border-white text-white rounded-full font-bold text-lg overflow-hidden transition-all hover:text-black disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                {isSubmitting ? "SENDING..." : isSent ? "SENT!" : "SEND MESSAGE"}
+                {!isSubmitting && !isSent && <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+              </span>
+              <div className="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+            </button>
+          </div>
         </form>
       </div>
     </section>

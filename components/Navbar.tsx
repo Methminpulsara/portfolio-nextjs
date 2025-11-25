@@ -17,7 +17,7 @@ export default function Navbar() {
         opacity: 0,
         duration: 1,
         ease: "power3.out",
-        delay: 0.5,
+        delay: 0.5, 
       });
     }, navRef);
 
@@ -35,12 +35,12 @@ export default function Navbar() {
   return (
     <>
       <nav ref={navRef} className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/5 rounded-full px-8 py-4 flex items-center gap-12 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
+        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/5 rounded-full px-12 py-4 flex items-center gap-12 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
           <div className="text-neutral-900 dark:text-white font-bold tracking-tighter cursor-pointer text-xl hover:text-green-600 dark:hover:text-green-400 transition-colors" onClick={() => scrollTo("hero")}>
             MP.
           </div>
 
-          <div className="hidden md:flex gap-8 text-sm font-medium text-neutral-600 dark:text-neutral-400">
+          <div className="hidden md:flex gap-12 text-sm font-medium text-neutral-600 dark:text-neutral-400">
             <button onClick={() => scrollTo("about")} className="hover:text-green-600 dark:hover:text-green-400 transition-colors hover:scale-105 transform duration-200">About</button>
             <button onClick={() => scrollTo("work")} className="hover:text-green-600 dark:hover:text-green-400 transition-colors hover:scale-105 transform duration-200">Work</button>
             <button onClick={() => scrollTo("skills")} className="hover:text-green-600 dark:hover:text-green-400 transition-colors hover:scale-105 transform duration-200">Skills</button>
