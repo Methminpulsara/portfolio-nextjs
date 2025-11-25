@@ -31,9 +31,9 @@ export default function Navbar() {
 
   return (
     <>
-      <nav ref={navRef} className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-xs border border-black/5 dark:border-white/5 rounded-full px-30 py-4 flex items-center gap-20 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
-          <div className="text-neutral-900 dark:text-white font-bold tracking-tighter cursor-pointer text-xl hover:text-green-600 dark:hover:text-green-400 transition-colors" onClick={() => scrollTo("hero")}>
+      <nav ref={navRef} className="fixed top-6 left-1/2 -translate-x-1/2 z-20">
+        <div className=" bg-white/50 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/5 rounded-full px-12 py-4 flex items-center gap-12 shadow-2xl shadow-green-900/10 hover:border-green-500/30 transition-colors duration-500">
+          <div className="text-neutral-900 dark:text-emerald-600 font-bold tracking-tighter cursor-pointer text-xl hover:text-green-600 dark:hover:text-green-400 transition-colors" onClick={() => scrollTo("hero")}>
             MP.
           </div>
 
@@ -57,7 +57,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center gap-8 text-3xl font-light text-neutral-900 dark:text-white">
+        <div className="fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-xl  flex flex-col items-center justify-center gap-8 text-3xl font-light text-neutral-900 dark:text-white">
           <button onClick={() => { setIsOpen(false); scrollTo("about"); }} className="hover:text-green-600 dark:hover:text-green-400">About</button>
           <button onClick={() => { setIsOpen(false); scrollTo("work"); }} className="hover:text-green-600 dark:hover:text-green-400">Work</button>
           <button onClick={() => { setIsOpen(false); scrollTo("skills"); }} className="hover:text-green-600 dark:hover:text-green-400">Skills</button>

@@ -18,13 +18,10 @@ export default function Footer() {
             <a href="#" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
               <Github className="w-6 h-6" />
             </a>
-            <a href="#" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
-              <Twitter className="w-6 h-6" />
-            </a>
-            <a href="#" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
+            <a href="https://www.linkedin.com/in/methmin-pulsara/" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
               <Linkedin className="w-6 h-6" />
             </a>
-            <a href="#" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
+            <a href="methminpulsara10@gmail.com" className="p-4 rounded-full bg-neutral-200 dark:bg-neutral-900 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
               <Mail className="w-6 h-6" />
             </a>
           </div>

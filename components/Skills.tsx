@@ -262,7 +262,7 @@ export default function Skills() {
               onClick={() => setActiveCategory(tab)}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 activeCategory === tab 
-                  ? "bg-green-500 text-black scale-105 shadow-[0_0_20px_rgba(16,185,129,0.4)]" 
+                  ? "bg-emerald-500 text-black scale-105 shadow-[0_0_20px_rgba(16,185,129,0.4)]" 
                   : "bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white"
               }`}
             >

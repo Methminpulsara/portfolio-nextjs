@@ -79,7 +79,7 @@ export default function Contact() {
             <a href="mailto:info@methminpulsara.dev" className="block text-2xl md:text-3xl font-light hover:text-green-400 transition-colors">
               info@methminpulsara.dev
             </a>
-            <p className="text-neutral-500 font-mono text-lg">+94 XX XXX XXXX</p>
+            <p className="text-neutral-500 font-mono text-lg">+94 76 091 9266</p>
           </div>
         </div>
 
