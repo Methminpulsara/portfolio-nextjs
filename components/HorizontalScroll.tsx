@@ -1,13 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Project } from "@/types/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Mock ProjectCard component - replace with your actual component
-const ProjectCard = ({ project }: { project: any }) => (
+const ProjectCard = ({ project }: { project: Project }) => (
   <div className="w-[70vw] md:w-[50vw] h-full bg-neutral-900/80 backdrop-blur-xl border border-neutral-800 rounded-3xl overflow-hidden group hover:border-emerald-500/50 transition-all duration-500">
     <div className="relative h-[60%] overflow-hidden">
       <img 
@@ -16,9 +17,34 @@ const ProjectCard = ({ project }: { project: any }) => (
         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent" />
-      <span className="absolute top-4 right-4 px-4 py-2 bg-emerald-500/90 backdrop-blur-sm rounded-full text-xs font-bold text-black">
-        {project.year}
-      </span>
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <span className="px-4 py-2 bg-emerald-500/90 backdrop-blur-sm rounded-full text-xs font-bold text-black">
+          {project.year}
+        </span>
+        {project.live && project.live !== "#" && (
+          <a 
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 bg-neutral-800/80 backdrop-blur-sm rounded-full text-white hover:bg-emerald-500/90 hover:text-black transition-all duration-300 group/link"
+            title="View Live Project"
+          >
+            <svg 
+              className="w-4 h-4" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        )}
+      </div>
     </div>
     <div className="p-8 space-y-4">
       <div className="flex items-center justify-between">
@@ -27,7 +53,7 @@ const ProjectCard = ({ project }: { project: any }) => (
       </div>
       <p className="text-neutral-400 leading-relaxed">{project.description}</p>
       <div className="flex flex-wrap gap-2 pt-2">
-        {project.tech.map((t: string) => (
+        {project.tech?.map((t: string) => (
           <span key={t} className="px-3 py-1 bg-neutral-800/50 rounded-full text-xs text-emerald-400 font-mono">
             {t}
           </span>
@@ -40,7 +66,7 @@ const ProjectCard = ({ project }: { project: any }) => (
 export default function HorizontalScroll() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [showViewAll, setShowViewAll] = useState(false);
 
   const projects = [
     {
@@ -95,109 +121,11 @@ export default function HorizontalScroll() {
     }
   ];
 
-  // Animated background
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationId: number;
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const lines: Array<{
-      y: number;
-      speed: number;
-      amplitude: number;
-      frequency: number;
-      offset: number;
-      opacity: number;
-      color: string;
-    }> = [];
-
-    for (let i = 0; i < 6; i++) {
-      lines.push({
-        y: (canvas.height / 7) * (i + 1),
-        speed: 0.0005 + Math.random() * 0.001,
-        amplitude: 30 + Math.random() * 40,
-        frequency: 0.002 + Math.random() * 0.003,
-        offset: Math.random() * Math.PI * 2,
-        opacity: 0.03 + Math.random() * 0.04,
-        color: i % 2 === 0 ? '16, 185, 129' : '52, 211, 153'
-      });
-    }
-
-    let time = 0;
-
-    const animate = () => {
-      time += 1;
-      
-      ctx.fillStyle = '#050505';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      lines.forEach((line) => {
-        ctx.beginPath();
-        ctx.moveTo(0, line.y);
-
-        for (let x = 0; x < canvas.width; x += 2) {
-          const y = line.y + Math.sin(x * line.frequency + time * line.speed + line.offset) * line.amplitude;
-          ctx.lineTo(x, y);
-        }
-
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        gradient.addColorStop(0, `rgba(${line.color}, 0)`);
-        gradient.addColorStop(0.3, `rgba(${line.color}, ${line.opacity})`);
-        gradient.addColorStop(0.7, `rgba(${line.color}, ${line.opacity})`);
-        gradient.addColorStop(1, `rgba(${line.color}, 0)`);
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = `rgba(${line.color}, ${line.opacity * 2})`;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      });
-
-      const gridSize = 60;
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-          const distanceFromCenter = Math.sqrt(
-            Math.pow(x - canvas.width / 2, 2) + 
-            Math.pow(y - canvas.height / 2, 2)
-          );
-          const opacity = Math.max(0, 0.12 - (distanceFromCenter / canvas.width) * 0.3);
-          
-          ctx.beginPath();
-          ctx.arc(x, y, 1, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(16, 185, 129, ${opacity})`;
-          ctx.fill();
-        }
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".project-card-container");
       
-      gsap.to(cards, {
+      const animation = gsap.to(cards, {
         xPercent: -100 * (cards.length - 1),
         ease: "none",
         scrollTrigger: {
@@ -206,8 +134,20 @@ export default function HorizontalScroll() {
           scrub: 1,
           snap: 1 / (cards.length - 1),
           end: () => "+=" + (triggerRef.current?.offsetWidth || 0),
+          onUpdate: (self) => {
+            // Show "View All" button when scrolled to the end (progress > 0.9)
+            if (self.progress > 0.9) {
+              setShowViewAll(true);
+            } else {
+              setShowViewAll(false);
+            }
+          }
         }
       });
+
+      return () => {
+        animation.kill();
+      };
     }, triggerRef);
 
     return () => ctx.revert();
@@ -215,19 +155,18 @@ export default function HorizontalScroll() {
 
   return (
     <section id="work" className="overflow-hidden bg-[#050505] relative">
-      {/* Animated Canvas Background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-      />
+      {/* CSS-only animated lines */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="wave-line" style={{ top: '30%' }} />
+        <div className="wave-line" style={{ top: '70%', animationDelay: '3s' }} />
+      </div>
 
-      {/* Gradient Overlays */}
+      {/* Static Gradient Overlay */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px] animate-float-slow" />
+        <div className="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px]" />
       </div>
 
       <div ref={triggerRef} className="h-screen flex items-center relative z-10">
-        {/* Title Section */}
         <div className="absolute top-12 left-6 md:left-12 z-20 pointer-events-none">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-2"
               style={{
@@ -241,7 +180,6 @@ export default function HorizontalScroll() {
           <p className="text-neutral-400 text-lg">Drag or scroll to explore</p>
         </div>
 
-        {/* Projects Container */}
         <div ref={sectionRef} className="flex pt-5 gap-12 md:gap-24 px-6 md:px-12 h-[65vh] w-full items-center mt-20">
           {projects.map((project) => (
             <div key={project.id} className="project-card-container h-full">
@@ -249,16 +187,54 @@ export default function HorizontalScroll() {
             </div>
           ))}
         </div>
+
+        {/* View All Projects Button */}
+        <div className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 z-20 transition-all duration-700 ${
+          showViewAll ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <a
+            href="https://github.com/Methminpulsara" // Replace with your actual projects page or GitHub
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/30 rounded-2xl text-white font-semibold hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all duration-500 hover:scale-105"
+          >
+            <span className="relative z-10">View All Projects</span>
+            <svg 
+              className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </a>
+        </div>
       </div>
 
       <style jsx>{`
-        @keyframes float-slow {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(50px, 50px); }
+        .wave-line {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(16, 185, 129, 0.08) 30%, 
+            rgba(16, 185, 129, 0.08) 70%, 
+            transparent 100%
+          );
+          animation: wave 8s ease-in-out infinite;
         }
         
-        .animate-float-slow {
-          animation: float-slow 30s ease-in-out infinite;
+        @keyframes wave {
+          0%, 100% { transform: translateX(0); opacity: 0.3; }
+          50% { transform: translateX(30px); opacity: 0.6; }
         }
       `}</style>
     </section>

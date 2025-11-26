@@ -6,319 +6,37 @@ import { gsap } from "gsap";
 
 export default function Skills() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Animated background matching hero
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationId: number;
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const lines: Array<{
-      y: number;
-      speed: number;
-      amplitude: number;
-      frequency: number;
-      offset: number;
-      opacity: number;
-      color: string;
-    }> = [];
-
-    for (let i = 0; i < 6; i++) {
-      lines.push({
-        y: (canvas.height / 7) * (i + 1),
-        speed: 0.0005 + Math.random() * 0.001,
-        amplitude: 30 + Math.random() * 40,
-        frequency: 0.002 + Math.random() * 0.003,
-        offset: Math.random() * Math.PI * 2,
-        opacity: 0.03 + Math.random() * 0.04,
-        color: i % 2 === 0 ? '16, 185, 129' : '52, 211, 153'
-      });
-    }
-
-    let time = 0;
-
-    const animate = () => {
-      time += 1;
-      
-      ctx.fillStyle = '#050505';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      lines.forEach((line) => {
-        ctx.beginPath();
-        ctx.moveTo(0, line.y);
-
-        for (let x = 0; x < canvas.width; x += 2) {
-          const y = line.y + Math.sin(x * line.frequency + time * line.speed + line.offset) * line.amplitude;
-          ctx.lineTo(x, y);
-        }
-
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        gradient.addColorStop(0, `rgba(${line.color}, 0)`);
-        gradient.addColorStop(0.3, `rgba(${line.color}, ${line.opacity})`);
-        gradient.addColorStop(0.7, `rgba(${line.color}, ${line.opacity})`);
-        gradient.addColorStop(1, `rgba(${line.color}, 0)`);
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = `rgba(${line.color}, ${line.opacity * 2})`;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      });
-
-      const gridSize = 60;
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-          const distanceFromCenter = Math.sqrt(
-            Math.pow(x - canvas.width / 2, 2) + 
-            Math.pow(y - canvas.height / 2, 2)
-          );
-          const opacity = Math.max(0, 0.12 - (distanceFromCenter / canvas.width) * 0.3);
-          
-          ctx.beginPath();
-          ctx.arc(x, y, 1, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(16, 185, 129, ${opacity})`;
-          ctx.fill();
-        }
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
   const skills = [
-    // Languages
-    {
-      name: "Python",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-      color: "from-blue-500 to-yellow-500",
-      accent: "border-blue-500/50"
-    },
-    {
-      name: "Java",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
-      color: "from-red-600 to-orange-400",
-      accent: "border-red-500/50"
-    },
-    {
-      name: "JavaScript",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-      color: "from-yellow-400 to-yellow-600",
-      accent: "border-yellow-500/50"
-    },
-    {
-      name: "TypeScript",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-      color: "from-blue-600 to-blue-400",
-      accent: "border-blue-600/50"
-    },
-    {
-      name: "HTML",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
-      color: "from-orange-500 to-red-500",
-      accent: "border-orange-500/50"
-    },
-    {
-      name: "CSS",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
-      color: "from-blue-500 to-blue-700",
-      accent: "border-blue-500/50"
-    },
-    {
-      name: "SCSS",
-      category: "Languages",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg",
-      color: "from-pink-500 to-purple-500",
-      accent: "border-pink-500/50"
-    },
-
-    // Frontend
-    {
-      name: "React",
-      category: "Frontend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-      color: "from-cyan-500 to-blue-500",
-      accent: "border-cyan-500/50"
-    },
-    {
-      name: "Next.js",
-      category: "Frontend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-      color: "from-white to-gray-400",
-      accent: "border-white/50"
-    },
-    {
-      name: "Angular",
-      category: "Frontend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
-      color: "from-red-500 to-red-700",
-      accent: "border-red-500/50"
-    },
-    {
-      name: "Bootstrap",
-      category: "Frontend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
-      color: "from-purple-500 to-purple-700",
-      accent: "border-purple-500/50"
-    },
-    {
-      name: "Tailwind",
-      category: "Frontend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
-      color: "from-teal-400 to-blue-500",
-      accent: "border-teal-500/50"
-    },
-
-    // Backend
-    {
-      name: "Node.js",
-      category: "Backend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-      color: "from-green-500 to-green-600",
-      accent: "border-green-500/50"
-    },
-    {
-      name: "Express.js",
-      category: "Backend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-      color: "from-gray-500 to-gray-700",
-      accent: "border-gray-500/50"
-    },
-    {
-      name: "Spring Boot",
-      category: "Backend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
-      color: "from-green-600 to-green-400",
-      accent: "border-green-500/50"
-    },
-    {
-      name: "FastAPI",
-      category: "Backend",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
-      color: "from-teal-500 to-green-500",
-      accent: "border-teal-500/50"
-    },
-
-    // Database
-    {
-      name: "MySQL",
-      category: "Database",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-      color: "from-blue-600 to-blue-400",
-      accent: "border-blue-500/50"
-    },
-    {
-      name: "MongoDB",
-      category: "Database",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-      color: "from-green-600 to-green-400",
-      accent: "border-green-500/50"
-    },
-    {
-      name: "PostgreSQL",
-      category: "Database",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-      color: "from-blue-700 to-blue-400",
-      accent: "border-blue-700/50"
-    },
-
-    // AI & Tools
-    {
-      name: "LangChain",
-      category: "AI & Tools",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/langchain/langchain-original.svg",
-      color: "from-emerald-500 to-teal-500",
-      accent: "border-emerald-500/50"
-    },
-    {
-      name: "OpenAI API",
-      category: "AI & Tools",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/openai/openai-original.svg",
-      color: "from-gray-400 to-gray-600",
-      accent: "border-gray-500/50"
-    },
-    {
-      name: "Ollama",
-      category: "AI & Tools",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ollama/ollama-original.svg",
-      color: "from-purple-500 to-purple-700",
-      accent: "border-purple-500/50"
-    },
-
-    // DevOps
-    {
-      name: "Docker",
-      category: "DevOps",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-      color: "from-blue-500 to-cyan-500",
-      accent: "border-blue-500/50"
-    },
-    {
-      name: "Selenium",
-      category: "DevOps",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg",
-      color: "from-green-500 to-gray-700",
-      accent: "border-green-500/50"
-    },
-
-    // Design
-    {
-      name: "Figma",
-      category: "Design",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
-      color: "from-pink-500 to-red-500",
-      accent: "border-pink-500/50"
-    },
-    {
-      name: "GSAP",
-      category: "Design",
-      icon: "https://seeklogo.com/images/G/greensock-gsap-icon-logo-2B3E38419F-seeklogo.com.png",
-      color: "from-green-500 to-teal-500",
-      accent: "border-green-500/50"
-    },
-
-    // Version Control
-    {
-      name: "GitHub",
-      category: "Version Control",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
-      color: "from-gray-700 to-gray-900",
-      accent: "border-gray-800/50"
-    },
-    {
-      name: "GitLab",
-      category: "Version Control",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg",
-      color: "from-orange-500 to-red-500",
-      accent: "border-orange-500/50"
-    },
+    { name: "Python", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", color: "from-blue-500 to-yellow-500" },
+    { name: "Java", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", color: "from-red-600 to-orange-400" },
+    { name: "JavaScript", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", color: "from-yellow-400 to-yellow-600" },
+    { name: "TypeScript", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", color: "from-blue-600 to-blue-400" },
+    { name: "HTML", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", color: "from-orange-500 to-red-500" },
+    { name: "CSS", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg", color: "from-blue-500 to-blue-700" },
+    { name: "SCSS", category: "Languages", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg", color: "from-pink-500 to-purple-500" },
+    { name: "React", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", color: "from-cyan-500 to-blue-500" },
+    { name: "Next.js", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", color: "from-white to-gray-400" },
+    { name: "Angular", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg", color: "from-red-500 to-red-700" },
+    { name: "Bootstrap", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg", color: "from-purple-500 to-purple-700" },
+    { name: "Tailwind", category: "Frontend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg", color: "from-teal-400 to-blue-500" },
+    { name: "Node.js", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", color: "from-green-500 to-green-600" },
+    { name: "Express.js", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", color: "from-gray-500 to-gray-700" },
+    { name: "Spring Boot", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg", color: "from-green-600 to-green-400" },
+    { name: "FastAPI", category: "Backend", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg", color: "from-teal-500 to-green-500" },
+    { name: "MySQL", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", color: "from-blue-600 to-blue-400" },
+    { name: "MongoDB", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg", color: "from-green-600 to-green-400" },
+    { name: "PostgreSQL", category: "Database", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", color: "from-blue-700 to-blue-400" },
+    { name: "LangChain", category: "AI & Tools", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/langchain/langchain-original.svg", color: "from-emerald-500 to-teal-500" },
+    { name: "OpenAI API", category: "AI & Tools", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/openai/openai-original.svg", color: "from-gray-400 to-gray-600" },
+    { name: "Ollama", category: "AI & Tools", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ollama/ollama-original.svg", color: "from-purple-500 to-purple-700" },
+    { name: "Docker", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg", color: "from-blue-500 to-cyan-500" },
+    { name: "Selenium", category: "DevOps", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg", color: "from-green-500 to-gray-700" },
+    { name: "Figma", category: "Design", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg", color: "from-pink-500 to-red-500" },
+    { name: "GSAP", category: "Design", icon: "https://seeklogo.com/images/G/greensock-gsap-icon-logo-2B3E38419F-seeklogo.com.png", color: "from-green-500 to-teal-500" },
+    { name: "GitHub", category: "Version Control", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", color: "from-gray-700 to-gray-900" },
+    { name: "GitLab", category: "Version Control", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg", color: "from-orange-500 to-red-500" },
   ];
 
   const categories = ["All", ...Array.from(new Set(skills.map(s => s.category)))];
@@ -345,16 +63,17 @@ export default function Skills() {
 
   return (
     <section id="skills" ref={containerRef} className="min-h-screen bg-[#050505] text-white py-32 px-6 relative overflow-hidden">
-      {/* Animated Canvas Background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-      />
+      {/* CSS-only animated lines */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="wave-line" style={{ top: '20%' }} />
+        <div className="wave-line" style={{ top: '50%', animationDelay: '2s' }} />
+        <div className="wave-line" style={{ top: '80%', animationDelay: '4s' }} />
+      </div>
 
-      {/* Gradient Overlays */}
+      {/* Static Gradient Overlays */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px] animate-float-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-[900px] h-[900px] bg-green-500/5 rounded-full blur-[200px] animate-float-slower" />
+        <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[900px] h-[900px] bg-green-500/5 rounded-full blur-[200px]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -373,7 +92,6 @@ export default function Skills() {
           </p>
         </div>
 
-        {/* Category Tabs */}
         <div className="flex flex-wrap justify-center gap-4 mb-16">
           {categories.map((tab) => (
             <button
@@ -390,7 +108,6 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Skills Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {filteredSkills.map((skill, idx) => (
             <div 
@@ -409,7 +126,6 @@ export default function Skills() {
                 {skill.name}
               </h3>
 
-              {/* Hover Glow */}
               <div className={`absolute inset-0 bg-gradient-to-br ${skill.color || 'from-green-500/10 to-transparent'} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none`} />
             </div>
           ))}
@@ -417,22 +133,23 @@ export default function Skills() {
       </div>
 
       <style jsx>{`
-        @keyframes float-slow {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(50px, 50px); }
+        .wave-line {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(16, 185, 129, 0.08) 30%, 
+            rgba(16, 185, 129, 0.08) 70%, 
+            transparent 100%
+          );
+          animation: wave 8s ease-in-out infinite;
         }
         
-        @keyframes float-slower {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(-30px, -40px); }
-        }
-        
-        .animate-float-slow {
-          animation: float-slow 30s ease-in-out infinite;
-        }
-        
-        .animate-float-slower {
-          animation: float-slower 40s ease-in-out infinite;
+        @keyframes wave {
+          0%, 100% { transform: translateX(0); opacity: 0.3; }
+          50% { transform: translateX(30px); opacity: 0.6; }
         }
       `}</style>
     </section>
