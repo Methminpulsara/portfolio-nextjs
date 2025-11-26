@@ -79,7 +79,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <Portal>
-          <div className="fixed inset-0 z-50 bg-white/95 dark:bg-black/95 flex flex-col items-center justify-center gap-12 text-3xl backdrop-blur-sm px-6">
+          <div className="fixed inset-0 z-50 text-neutral-900 dark:text-white bg-white/95 dark:bg-black/95 flex flex-col items-center justify-center gap-12 text-3xl backdrop-blur-sm px-6">
 
             <div className="flex items-center gap-4 mb-8">
               <Logo className="h-12 w-12 text-emerald-500" />
