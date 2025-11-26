@@ -107,7 +107,7 @@ export default function BackgroundEffect() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen"
+      className="fixed inset-0 z-110 pointer-events-none opacity-40 mix-blend-screen"
     />
   );
 }

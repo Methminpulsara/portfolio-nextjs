@@ -6,7 +6,106 @@ import { gsap } from "gsap";
 
 export default function Skills() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // Animated background matching hero
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationId: number;
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const lines: Array<{
+      y: number;
+      speed: number;
+      amplitude: number;
+      frequency: number;
+      offset: number;
+      opacity: number;
+      color: string;
+    }> = [];
+
+    for (let i = 0; i < 6; i++) {
+      lines.push({
+        y: (canvas.height / 7) * (i + 1),
+        speed: 0.0005 + Math.random() * 0.001,
+        amplitude: 30 + Math.random() * 40,
+        frequency: 0.002 + Math.random() * 0.003,
+        offset: Math.random() * Math.PI * 2,
+        opacity: 0.03 + Math.random() * 0.04,
+        color: i % 2 === 0 ? '16, 185, 129' : '52, 211, 153'
+      });
+    }
+
+    let time = 0;
+
+    const animate = () => {
+      time += 1;
+      
+      ctx.fillStyle = '#050505';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      lines.forEach((line) => {
+        ctx.beginPath();
+        ctx.moveTo(0, line.y);
+
+        for (let x = 0; x < canvas.width; x += 2) {
+          const y = line.y + Math.sin(x * line.frequency + time * line.speed + line.offset) * line.amplitude;
+          ctx.lineTo(x, y);
+        }
+
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop(0, `rgba(${line.color}, 0)`);
+        gradient.addColorStop(0.3, `rgba(${line.color}, ${line.opacity})`);
+        gradient.addColorStop(0.7, `rgba(${line.color}, ${line.opacity})`);
+        gradient.addColorStop(1, `rgba(${line.color}, 0)`);
+        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = `rgba(${line.color}, ${line.opacity * 2})`;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      });
+
+      const gridSize = 60;
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        for (let y = 0; y < canvas.height; y += gridSize) {
+          const distanceFromCenter = Math.sqrt(
+            Math.pow(x - canvas.width / 2, 2) + 
+            Math.pow(y - canvas.height / 2, 2)
+          );
+          const opacity = Math.max(0, 0.12 - (distanceFromCenter / canvas.width) * 0.3);
+          
+          ctx.beginPath();
+          ctx.arc(x, y, 1, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(16, 185, 129, ${opacity})`;
+          ctx.fill();
+        }
+      }
+
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
 
   const skills = [
     // Languages
@@ -245,11 +344,31 @@ export default function Skills() {
   }, [activeCategory]);
 
   return (
-    <section id="skills" ref={containerRef} className="min-h-screen bg-neutral-950 text-white py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="skills" ref={containerRef} className="min-h-screen bg-[#050505] text-white py-32 px-6 relative overflow-hidden">
+      {/* Animated Canvas Background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-0"
+      />
+
+      {/* Gradient Overlays */}
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px] animate-float-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-[900px] h-[900px] bg-green-500/5 rounded-full blur-[200px] animate-float-slower" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">Technical Arsenal</h2>
-          <p className="text-neutral-400 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6"
+              style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, #10b981 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
+            Technical Arsenal
+          </h2>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
             The tools and technologies I use to bring ideas to life.
           </p>
         </div>
@@ -260,10 +379,10 @@ export default function Skills() {
             <button
               key={tab}
               onClick={() => setActiveCategory(tab)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-6 py-3 rounded-2xl text-sm font-medium transition-all duration-300 ${
                 activeCategory === tab 
-                  ? "bg-emerald-500 text-black scale-105 shadow-[0_0_20px_rgba(16,185,129,0.4)]" 
-                  : "bg-neutral-900 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                  ? "bg-emerald-500 text-black scale-105 shadow-[0_0_30px_rgba(16,185,129,0.5)]" 
+                  : "bg-neutral-900/80 backdrop-blur-xl border border-neutral-800 text-neutral-400 hover:bg-neutral-800 hover:text-white hover:border-emerald-500/30"
               }`}
             >
               {tab}
@@ -276,7 +395,7 @@ export default function Skills() {
           {filteredSkills.map((skill, idx) => (
             <div 
               key={`${skill.name}-${idx}`}
-              className="skill-card group relative bg-neutral-900/50 border border-neutral-800 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 hover:border-green-500/50 hover:bg-neutral-800/80 transition-all duration-300 cursor-pointer"
+              className="skill-card group relative bg-neutral-900/50 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 hover:border-emerald-500/50 hover:bg-neutral-800/80 transition-all duration-300 cursor-pointer"
             >
               <div className="relative w-16 h-16 flex items-center justify-center bg-black/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                 <img 
@@ -296,6 +415,26 @@ export default function Skills() {
           ))}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes float-slow {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(50px, 50px); }
+        }
+        
+        @keyframes float-slower {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-30px, -40px); }
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 30s ease-in-out infinite;
+        }
+        
+        .animate-float-slower {
+          animation: float-slower 40s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 }
