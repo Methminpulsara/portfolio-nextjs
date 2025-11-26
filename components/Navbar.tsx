@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "../lib/gsapClient";
 import Portal from "./Portal";
+import Logo from "./Logo"; // <--- IMPORT LOGO
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  /* --- GSAP NAVBAR ANIMATION --- */
   useEffect(() => {
     if (!navRef.current) return;
 
@@ -24,7 +24,6 @@ export default function Navbar() {
     return () => ctx.revert();
   }, []);
 
-  /* --- Smooth Scroll --- */
   const scrollTo = (id: string) => {
     setIsOpen(false);
     const el = document.getElementById(id);
@@ -33,66 +32,72 @@ export default function Navbar() {
 
   return (
     <>
-      {/* NAVBAR */}
       <nav
         ref={navRef}
         className="fixed top-6 left-1/2 -translate-x-1/2 z-40"
       >
-        <div className="bg-white/50 dark:bg-black/20 backdrop-blur-md 
-          border border-black/5 dark:border-white/5 rounded-full px-10 py-4 
-          flex items-center gap-10 shadow-xl transition-colors duration-500">
-
-          {/* LOGO */}
+        <div
+          className="
+          bg-white/20 dark:bg-black/10 
+          backdrop-blur-xl
+          border border-white/10 dark:border-white/5 
+          rounded-full px-8 py-3
+          flex items-center gap-10 
+          shadow-lg shadow-black/5 dark:shadow-white/5
+          transition-all duration-500
+        ">
+          
+          {/* Logo */}
           <div
-            className="text-neutral-900 dark:text-emerald-600 font-bold text-xl cursor-pointer"
+            className="flex items-center gap-2 cursor-pointer group"
             onClick={() => scrollTo("hero")}
           >
-            MP.
+            <Logo className="h-8 w-8 text-emerald-500 group-hover:text-emerald-400 transition-colors duration-300" />
+         
           </div>
 
-          {/* DESKTOP MENU */}
-          <div className="hidden md:flex gap-10 text-sm text-neutral-700 dark:text-neutral-300">
-            <button onClick={() => scrollTo("about")} className="hover:text-green-600">About</button>
-            <button onClick={() => scrollTo("work")} className="hover:text-green-600">Work</button>
-            <button onClick={() => scrollTo("skills")} className="hover:text-green-600">Skills</button>
-            <button onClick={() => scrollTo("contact")} className="hover:text-green-600">Contact</button>
+          {/* Desktop Menu */}
+          <div className="hidden md:flex gap-15 text-sm text-neutral-700 dark:text-neutral-300">
+            <button onClick={() => scrollTo("about")} className="hover:text-emerald-500 transition-colors duration-300">About</button>
+            <button onClick={() => scrollTo("work")}  className="hover:text-emerald-500 transition-colors duration-300">Work</button>
+            <button onClick={() => scrollTo("skills")} className="hover:text-emerald-500 transition-colors duration-300">Skills</button>
+            <button onClick={() => scrollTo("contact")} className="hover:text-emerald-500 transition-colors duration-300">Contact</button>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
+          {/* Mobile Burger */}
           <button
-            className="md:hidden text-neutral-900 dark:text-white hover:text-green-500"
+            className="md:hidden text-neutral-900 dark:text-white hover:text-emerald-500 transition"
             onClick={() => setIsOpen(true)}
           >
-            Menu
+            <svg className="w-6 h-6" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
           </button>
         </div>
       </nav>
 
-      {/* MOBILE OVERLAY MENU (PORTAL) */}
+      {/* Mobile Menu */}
       {isOpen && (
         <Portal>
-          <div className="fixed inset-0 z-50 bg-white/95 dark:bg-black/95
-            flex flex-col items-center justify-center gap-10 text-3xl
-            text-neutral-900 dark:text-white backdrop-blur-xl text-transparent ">
+          <div className="fixed inset-0 z-50 bg-white/95 dark:bg-black/95 flex flex-col items-center justify-center gap-12 text-3xl backdrop-blur-xl">
 
-            <button onClick={() => scrollTo("about")} className="hover:text-green-500">
-              About
-            </button>
-            <button onClick={() => scrollTo("work")} className="hover:text-green-500">
-              Work
-            </button>
-            <button onClick={() => scrollTo("skills")} className="hover:text-green-500">
-              Skills
-            </button>
-            <button onClick={() => scrollTo("contact")} className="hover:text-green-500">
-              Contact
-            </button>
+            <div className="flex items-center gap-4 mb-8">
+              <Logo className="h-12 w-12 text-emerald-500" />
+              <span className="text-emerald-500 font-bold text-2xl">Methmin</span>
+            </div>
+
+            <button onClick={() => scrollTo("about")} className="hover:text-emerald-500">About</button>
+            <button onClick={() => scrollTo("work")} className="hover:text-emerald-500">Work</button>
+            <button onClick={() => scrollTo("skills")} className="hover:text-emerald-500">Skills</button>
+            <button onClick={() => scrollTo("contact")} className="hover:text-emerald-500">Contact</button>
 
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-8 right-8 text-sm opacity-50 hover:text-green-500"
+              className="absolute top-8 right-8 opacity-70 hover:text-emerald-500"
             >
-              CLOSE
+              <svg className="w-6 h-6" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
         </Portal>

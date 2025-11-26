@@ -161,5 +161,4 @@ export default function BackgroundEffect() {
       style={{ mixBlendMode: 'screen' }}
     />
   );
-  
 }
