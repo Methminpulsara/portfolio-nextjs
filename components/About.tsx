@@ -193,7 +193,7 @@ export default function About() {
         </div>
 
         {/* Content Column */}
-        <div className="space-y-8">
+        <div className="space-y-8 select-none">
           <h2 className="about-text-reveal text-sm font-mono text-emerald-400 tracking-widest uppercase">
             About Me
           </h2>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "../lib/gsapClient";
 import Portal from "./Portal";
-import Logo from "./Logo"; // <--- IMPORT LOGO
+import Logo from "./Logo";
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -38,10 +38,10 @@ export default function Navbar() {
       >
         <div
           className="
-          bg-white/20 dark:bg-black/10 
-          backdrop-blur-xl
+          bg-white/10 dark:bg-black/10 
+          backdrop-blur-md
           border border-white/10 dark:border-white/5 
-          rounded-full px-8 py-3
+          rounded-full px-20 py-3
           flex items-center gap-10 
           shadow-lg shadow-black/5 dark:shadow-white/5
           transition-all duration-500
@@ -49,7 +49,7 @@ export default function Navbar() {
           
           {/* Logo */}
           <div
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-10 cursor-pointer group"
             onClick={() => scrollTo("hero")}
           >
             <Logo className="h-8 w-8 text-emerald-500 group-hover:text-emerald-400 transition-colors duration-300" />
@@ -79,17 +79,17 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <Portal>
-          <div className="fixed inset-0 z-50 bg-white/95 dark:bg-black/95 flex flex-col items-center justify-center gap-12 text-3xl backdrop-blur-xl">
+          <div className="fixed inset-0 z-50 bg-white/95 dark:bg-black/95 flex flex-col items-center justify-center gap-12 text-3xl backdrop-blur-sm px-6">
 
             <div className="flex items-center gap-4 mb-8">
               <Logo className="h-12 w-12 text-emerald-500" />
               <span className="text-emerald-500 font-bold text-2xl">Methmin</span>
             </div>
 
-            <button onClick={() => scrollTo("about")} className="hover:text-emerald-500">About</button>
-            <button onClick={() => scrollTo("work")} className="hover:text-emerald-500">Work</button>
-            <button onClick={() => scrollTo("skills")} className="hover:text-emerald-500">Skills</button>
-            <button onClick={() => scrollTo("contact")} className="hover:text-emerald-500">Contact</button>
+            <button onClick={() => scrollTo("about")} className="hover:text-emerald-500 w-full text-center py-2">About</button>
+            <button onClick={() => scrollTo("work")} className="hover:text-emerald-500 w-full text-center py-2">Work</button>
+            <button onClick={() => scrollTo("skills")} className="hover:text-emerald-500 w-full text-center py-2">Skills</button>
+            <button onClick={() => scrollTo("contact")} className="hover:text-emerald-500 w-full text-center py-2">Contact</button>
 
             <button
               onClick={() => setIsOpen(false)}
