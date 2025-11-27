@@ -31,7 +31,7 @@ export default function Footer() {
         amplitude: 25 + Math.random() * 25,
         frequency: 0.002 + Math.random() * 0.003,
         offset: Math.random() * Math.PI * 2,
-        opacity: 0.02 + Math.random() * 0.03,
+        opacity: 3.05 + Math.random() * 0.03,
         color: i % 2 === 0 ? "16, 185, 129" : "52, 211, 153",
       });
     }

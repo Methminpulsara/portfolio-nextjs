@@ -97,7 +97,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={containerRef}
-      className="relative h-screen w-full flex flex-col justify-between overflow-hidden bg-[#050505] text-white"
+      className="relative h-screen w-full select-none flex flex-col justify-between overflow-hidden bg-[#050505] text-white"
     >
       {/* Static gradient overlays - no animation */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
@@ -256,11 +256,11 @@ export default function Hero() {
           0%,
           100% {
             transform: translateX(0);
-            opacity: 0.3;
+            opacity: 5.3;
           }
           50% {
             transform: translateX(30px);
-            opacity: 0.6;
+            opacity: 5.6;
           }
         }
 

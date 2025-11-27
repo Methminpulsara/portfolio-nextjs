@@ -53,9 +53,7 @@ export default function Cursor() {
   return (
     <div 
       ref={cursorRef} 
-      className="fixed top-0 left-0 w-2 h-2 bg-emerald-400 rounded-full pointer-events-none z-[9999] will-change-transform"
       style={{
-        boxShadow: '0 0 15px rgba(16, 185, 129, 0.9)',
         transform: 'translate(-50%, -50%)'
       }}
     />

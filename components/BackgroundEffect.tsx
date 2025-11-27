@@ -97,7 +97,7 @@ export default function BackgroundEffect() {
       // Draw ripples
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
-        r.radius += 3;
+        r.radius += 2;
         r.alpha -= 0.015;
 
         if (r.alpha <= 0 || r.radius > r.maxRadius) {
@@ -122,7 +122,7 @@ export default function BackgroundEffect() {
       mouseY = e.clientY;
 
       const now = Date.now();
-      if (now - lastRippleTime > 150) {
+      if (now - lastRippleTime > 100) {
         createRipple(e.clientX, e.clientY);
         lastRippleTime = now;
       }
@@ -157,7 +157,7 @@ export default function BackgroundEffect() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[9999] pointer-events-none opacity-60"
+      className="fixed inset-0 z-[9999] pointer-events-none opacity-40"
       style={{ mixBlendMode: 'screen' }}
     />
   );
