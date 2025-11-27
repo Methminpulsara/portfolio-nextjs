@@ -29,11 +29,40 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  const copyEmail = () => {
-    navigator.clipboard.writeText("methminpulsara10@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+const copyEmail = () => {
+  const email = "methminpulsara10@gmail.com";
+
+  // Try modern API first
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  } else {
+    // Mobile fallback
+    const textArea = document.createElement("textarea");
+    textArea.value = email;
+
+    // Avoid scrolling on iOS
+    textArea.style.position = "fixed";
+    textArea.style.top = "-9999px";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand("copy");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+
+    document.body.removeChild(textArea);
+  }
+};
+
 
   // Smooth text morphing animation
   useEffect(() => {

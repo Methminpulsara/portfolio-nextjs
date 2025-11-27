@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  turbopack: {
+    root: __dirname, // Ensures this folder is the root
+  },
 
-const nextConfig: NextConfig = {
-  /* config options here */
+  allowedDevOrigins: [
+    "http://10.217.85.160:3000", // Allow your LAN IP
+    "http://localhost:3000",
+  ],
 };
 
 export default nextConfig;

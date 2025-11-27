@@ -9,8 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Contact() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -38,36 +37,37 @@ export default function Contact() {
           start: "top 70%",
         }
       });
-
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    setTimeout(() => {
-      console.log("Form submitted:", formState);
-      setIsSubmitting(false);
-      setIsSent(true);
-      setFormState({ name: "", email: "", message: "" });
-      
-      setTimeout(() => setIsSent(false), 3000);
-    }, 1500);
+  const handleSend = () => {
+    setIsSending(true);
+
+    const email = "methminpulsara10@gmail.com"; // Your receiving email
+    const subject = encodeURIComponent(`New Message from ${formState.name}`);
+    const body = encodeURIComponent(
+      ` ${formState.name}\n ${formState.email}\n\n${formState.message}`
+    );
+
+    // Create mailto link
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    // Open user's email app
+    window.location.href = mailtoLink;
+
+    setTimeout(() => setIsSending(false), 1500);
   };
 
   return (
     <section id="contact" ref={containerRef} className="min-h-screen bg-[#050505] text-white px-6 py-32 flex items-center relative overflow-hidden">
-      {/* CSS-only animated lines */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="wave-line" style={{ top: '25%' }} />
         <div className="wave-line" style={{ top: '50%', animationDelay: '2s' }} />
         <div className="wave-line" style={{ top: '75%', animationDelay: '4s' }} />
       </div>
 
-      {/* Static Gradient Overlays */}
       <div className="absolute inset-0 z-[1] pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[200px]" />
         <div className="absolute bottom-1/4 right-1/4 w-[900px] h-[900px] bg-green-500/5 rounded-full blur-[200px]" />
@@ -132,13 +132,13 @@ export default function Contact() {
 
           <div className="contact-form-reveal pt-8">
             <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
+              onClick={handleSend}
+              disabled={isSending}
               className="group relative px-10 py-5 bg-transparent border border-white/30 text-white rounded-full font-bold text-lg overflow-hidden transition-all hover:text-black hover:border-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
             >
               <span className="relative z-10 flex items-center justify-center gap-3">
-                {isSubmitting ? "SENDING..." : isSent ? "SENT!" : "SEND MESSAGE"}
-                {!isSubmitting && !isSent && <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+                {isSending ? "OPENING..." : "SEND MESSAGE"}
+                {!isSending && <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
               </span>
               <div className="absolute inset-0 bg-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </button>
