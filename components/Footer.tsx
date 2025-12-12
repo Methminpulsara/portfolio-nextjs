@@ -23,18 +23,29 @@ export default function Footer() {
     resize();
     window.addEventListener("resize", resize);
 
-    const lines = [];
-    for (let i = 0; i < 4; i++) {
-      lines.push({
-        y: (canvas.height / 5) * (i + 1),
-        speed: 0.0005 + Math.random() * 0.001,
-        amplitude: 25 + Math.random() * 25,
-        frequency: 0.002 + Math.random() * 0.003,
-        offset: Math.random() * Math.PI * 2,
-        opacity: 3.05 + Math.random() * 0.03,
-        color: i % 2 === 0 ? "16, 185, 129" : "52, 211, 153",
-      });
-    }
+    const lines: {
+    y: number;
+    speed: number;
+    amplitude: number;
+    frequency: number;
+    offset: number;
+    opacity: number;
+    color: string;
+  }[] = [];
+
+
+
+for (let i = 0; i < 4; i++) {
+  lines.push({
+    y: (canvas.height / 5) * (i + 1),
+    speed: 0.0005 + Math.random() * 0.001,
+    amplitude: 25 + Math.random() * 25,
+    frequency: 0.002 + Math.random() * 0.003,
+    offset: Math.random() * Math.PI * 2,
+    opacity: 3.05 + Math.random() * 0.03,
+    color: i % 2 === 0 ? "16, 185, 129" : "52, 211, 153",
+  });
+}
 
     let t = 0;
 
