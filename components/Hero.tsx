@@ -78,7 +78,7 @@ const copyEmail = () => {
         },
       });
 
-      const items = gsap.utils.toArray(".hero-text-item");
+    const items = gsap.utils.toArray<HTMLElement>(".hero-text-item");
 
       gsap.set(items, {
         opacity: 0,
