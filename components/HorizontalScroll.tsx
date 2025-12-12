@@ -76,7 +76,7 @@ export default function HorizontalScroll() {
       description: 'A comprehensive event management platform developed during my academic studies. Features real-time event booking, attendee management, and live updates using WebSockets for seamless user experience.',
       tech: ['Angular', 'Spring Boot', 'WebSockets', 'MySQL', 'Java'],
       live: 'https://github.com/iCET-Computer-Engineering-Technology/EVO-Frontend',
-      year: "2024",
+      year: "2024-225",
       image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop"
     },
     {
@@ -91,33 +91,23 @@ export default function HorizontalScroll() {
     },
     {
       id: 3,
-      title: 'Analytics',
-      description: 'Advanced analytics module for the SkillMatch platform. Visualizes employee growth trajectories, skill gaps, and training ROI using interactive charts and data export capabilities.',
-      tech: ['Angular', 'D3.js', 'Spring Boot', 'MySQL'],
-      live: 'https://github.com/Methminpulsara/skill-match--Frontend',
-      category: "Web Application",
+      title: 'YouTube Video Analyzer',
+      description: 'Built an automated system that extracts transcripts, metadata, topics, insights, and summaries from YouTube videos.',
+      tech: ['FastAPI', 'LangChain', 'Ollama', ' Sentence-Transformers'],
+      live: 'https://github.com/Methminpulsara/youtube-video-analyzer-with-Ollama',
+      category: "Backend",
       image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop",
-      year: "2023"
+      year: "2025"
     },
     {
       id: 4,
-      title: "Portfolio V1",
-      category: "Website",
-      description: "My first personal portfolio website showcasing early projects and design experiments. Built with vanilla HTML/CSS and JavaScript with a focus on clean typography.",
-      tech: ["HTML", "CSS", "JavaScript", "GSAP"],
-      live: "#",
-      image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2055&auto=format&fit=crop",
-      year: "2023"
-    },
-    {
-      id: 5,
-      title: 'Library Sys',
+      title: 'Library FX',
       description: 'Desktop application for managing book borrowing, returns, fines, and integrations with MySQL. Features a clean, responsive user interface designed with JavaFX.',
       tech: ['JavaFX', 'MySQL', 'JDBC'],
       live: 'https://github.com/Methminpulsara/Library-ManagmentSysytem',
       category: "Desktop App",
       image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop",
-      year: "2022"
+      year: "2024"
     }
   ];
 
