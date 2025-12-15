@@ -90,11 +90,11 @@ export default function Contact() {
           </p>
           
           <div className="contact-text-reveal mt-16 space-y-6">
-            <a href="mailto:info@methminpulsara.dev" 
+            <a href="mailto:methminpulsara10@gmail.com" 
                className="block text-2xl md:text-3xl font-light hover:text-emerald-400 transition-colors duration-300">
               info@methminpulsara.dev
             </a>
-            <p className="text-neutral-500 font-mono text-lg">+94 76 091 9266</p>
+            <p className="text-neutral-500 font-mono text-lg">+94 77 463 0072</p>
           </div>
         </div>
 
