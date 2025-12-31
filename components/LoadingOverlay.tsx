@@ -1,224 +1,118 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import { useEffect, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface LoadingOverlayProps {
   onComplete: () => void;
   isPageLoaded: boolean;
 }
 
-export default function LoadingOverlay({ onComplete, isPageLoaded }: LoadingOverlayProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mLetterRef = useRef<SVGPathElement>(null);
-  const pLetterRef = useRef<SVGPathElement>(null);
-  const progressTextRef = useRef<HTMLDivElement>(null);
-  const statusTextRef = useRef<HTMLDivElement>(null);
+export default function TechLoadingOverlay({
+  onComplete,
+  isPageLoaded,
+}: LoadingOverlayProps) {
   const [progress, setProgress] = useState(0);
-  const [canFinish, setCanFinish] = useState(false);
+  const [visible, setVisible] = useState(true);
 
-  // Floating particles
+  /* ---------------- Progress Logic ---------------- */
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!visible) return;
 
-    const container = containerRef.current;
-    const count = 20;
-
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement("div");
-      particle.className = "absolute rounded-full bg-emerald-400/20";
-
-      const size = Math.random() * 4 + 1;
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const delay = Math.random() * 5;
-      const duration = Math.random() * 4 + 2;
-
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.left = `${x}%`;
-      particle.style.top = `${y}%`;
-      particle.style.animation = `floatParticle ${duration}s ease-in-out ${delay}s infinite`;
-
-      container.appendChild(particle);
-    }
-
-    return () => {
-      const particles = container.querySelectorAll(".absolute.rounded-full");
-      particles.forEach((p) => p.remove());
-    };
-  }, []);
-
-  // Init animation
-  useEffect(() => {
-    if (!mLetterRef.current || !pLetterRef.current) return;
-
-    gsap.set([mLetterRef.current, pLetterRef.current], {
-      strokeDasharray: (_, t) => t.getTotalLength(),
-      strokeDashoffset: (_, t) => t.getTotalLength(),
-      fill: "transparent",
-    });
-  }, []);
-
-  // Update animation
-  useEffect(() => {
-    if (!mLetterRef.current || !pLetterRef.current) return;
-
-    const m = mLetterRef.current;
-    const p = pLetterRef.current;
-
-    const ml = m.getTotalLength();
-    const pl = p.getTotalLength();
-
-    const mProg = Math.min(progress / 50, 1);
-    const pProg = Math.max((progress - 50) / 50, 0);
-
-    if (progress <= 50) {
-      m.style.strokeDashoffset = (ml * (1 - mProg)).toString();
-    } else {
-      m.style.strokeDashoffset = "0";
-      m.style.fill = "rgba(16,185,129,0.8)";
-    }
-
-    if (progress > 50) {
-      p.style.strokeDashoffset = (pl * (1 - pProg)).toString();
-    }
-
-    if (progress >= 100) {
-      p.style.strokeDashoffset = "0";
-      p.style.fill = "rgba(16,185,129,0.8)";
-    }
-  }, [progress]);
-
-  // Progress simulation
-  useEffect(() => {
     let interval: NodeJS.Timeout;
 
     interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90 && !isPageLoaded) return 90;
-        if (prev >= 100) {
-          setCanFinish(true);
+      setProgress((p) => {
+        // hold until real page loaded
+        if (p >= 94 && !isPageLoaded) return 94;
+
+        if (p >= 100) {
           clearInterval(interval);
+          setTimeout(() => setVisible(false), 600);
           return 100;
         }
-        const inc = prev < 50 ? Math.random() * 3 + 2 : Math.random() * 2 + 1;
-        return Math.min(prev + Math.floor(inc), 100);
+
+        return Math.min(p + (p < 60 ? 0.9 : 0.4), 100);
       });
-    }, 80);
+    }, 32);
 
     return () => clearInterval(interval);
-  }, [isPageLoaded]);
+  }, [isPageLoaded, visible]);
 
-  // Exit animation
+  /* ---------------- Exit callback ---------------- */
   useEffect(() => {
-    if (!canFinish || !isPageLoaded) return;
+    if (!visible && progress >= 100) {
+      onComplete();
+    }
+  }, [visible, progress, onComplete]);
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ onComplete });
-
-      tl.to([progressTextRef.current, statusTextRef.current], {
-        opacity: 0,
-        y: -10,
-        duration: 0.5,
-      })
-        .to(
-          [mLetterRef.current, pLetterRef.current],
-          { scale: 0.8, opacity: 0, duration: 0.8, stagger: 0.1 },
-          "-=0.3"
-        )
-        .to(
-          containerRef.current,
-          {
-            opacity: 0,
-            scale: 1.1,
-            duration: 1,
-            onComplete: () => {
-              if (containerRef.current) containerRef.current.style.display = "none";
-            },
-          },
-          "-=0.5"
-        );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [canFinish, isPageLoaded, onComplete]);
-
-  const getStatusText = () => {
-    if (progress < 50) return "DRAWING M...";
-    if (progress < 100) return "DRAWING P...";
-    return "READY!";
-  };
+  const scanlines = useMemo(() => Array.from({ length: 5 }), []);
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 z-[100] bg-black flex items-center justify-center text-white overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-900 to-emerald-900/10" />
-
-      <div className="relative z-10 flex flex-col items-center gap-16">
-        {/* New Larger Centered MP */}
-        <svg
-          width="300"
-          height="200"
-          viewBox="0 0 120 90"
-          className="filter drop-shadow-2xl"
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed inset-0 z-[9999] bg-[#070707] flex items-center justify-center font-mono overflow-hidden"
         >
-          {/* NEW M */}
-          <path
-            ref={mLetterRef}
-            d="M20 70 L20 20 L40 45 L60 20 L60 70"
-            stroke="#10b981"
-            strokeWidth="5"
-            fill="transparent"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {/* Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b9810a_1px,transparent_1px),linear-gradient(to_bottom,#10b9810a_1px,transparent_1px)] bg-[size:48px_48px]" />
 
-          {/* NEW P */}
-          <path
-            ref={pLetterRef}
-            d="
-            M70 20 L70 70
-            M70 20 L95 20 L105 35 L105 50 L95 65 L70 65
-            "
-            stroke="#10b981"
-            strokeWidth="5"
-            fill="transparent"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+          {/* Ambient */}
+          <div className="absolute w-[360px] h-[360px] bg-emerald-500/5 rounded-full blur-[120px]" />
 
-        <div className="flex flex-col items-center gap-6">
-          <div ref={progressTextRef} className="text-5xl md:text-6xl font-black text-emerald-400">
-            {progress}%
+          {/* Content */}
+          <div className="relative z-10 w-[320px]">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="text-[10px] tracking-[0.4em] text-emerald-500/70">
+                SYSTEM_BOOT
+              </div>
+              <div className="mt-2 flex items-baseline justify-between">
+                <div className="text-3xl text-white tracking-tight">
+                  MP<span className="text-emerald-500">.</span>
+                </div>
+                <div className="text-xl text-white">
+                  {Math.floor(progress)}%
+                </div>
+              </div>
+            </div>
+
+            {/* Progress */}
+            <div className="h-px w-full bg-white/10">
+              <motion.div
+                className="h-full bg-emerald-500"
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: "linear", duration: 0.03 }}
+              />
+            </div>
+
+            {/* Status */}
+            <div className="mt-6 text-[10px] text-emerald-500/50 tracking-widest uppercase">
+              {progress < 35 && "Initializing runtime environment"}
+              {progress >= 35 && progress < 70 && "Loading application modules"}
+              {progress >= 70 && "Finalizing system state"}
+            </div>
           </div>
 
-          <div ref={statusTextRef} className="text-sm tracking-[0.4em] text-emerald-400/90 font-mono">
-            {getStatusText()}
-          </div>
-
-          <div className="w-56 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-300 rounded-full"
-              style={{ width: `${progress}%` }}
+          {/* Scanlines */}
+          {scanlines.map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute h-px w-full bg-emerald-500/10"
+              animate={{ top: ["-10%", "110%"] }}
+              transition={{
+                duration: 6,
+                delay: i * 1.4,
+                repeat: Infinity,
+                ease: "linear",
+              }}
             />
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-48 h-48 bg-emerald-500/5 rounded-full blur-[80px] animate-pulse" />
-
-      <style jsx>{`
-        @keyframes floatParticle {
-          0% { transform: translate(0, 0); opacity: 0.3; }
-          33% { transform: translate(10px, -15px); opacity: 0.6; }
-          66% { transform: translate(-5px, -25px); opacity: 0.8; }
-          100% { transform: translate(0, -30px); opacity: 0.3; }
-        }
-      `}</style>
-    </div>
+          ))}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
