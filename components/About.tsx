@@ -181,10 +181,10 @@ export default function About() {
         
         {/* Image Column */}
         <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-md mx-auto md:mx-0 overflow-hidden rounded-2xl group">
-          <div className="absolute inset-0 bg-emerald-500/20 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500" />
+          <div className="absolute inset-0 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500" />
           <img 
             ref={imageRef}
-            src="public/assets/linkdin-profile.png" 
+            src="/assets/linkdin-profile.png" 
             alt="Profile" 
             className="w-full h-full object-cover object-center"
           />
