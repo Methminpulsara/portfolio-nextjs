@@ -184,7 +184,7 @@ export default function About() {
           <div className="absolute inset-0 bg-emerald-500/20 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500" />
           <img 
             ref={imageRef}
-            src="https://cdn.pixabay.com/photo/2021/08/04/13/06/software-developer-6521720_1280.jpg" 
+            src="public/assets/linkdin-profile.png" 
             alt="Profile" 
             className="w-full h-full object-cover object-center"
           />
