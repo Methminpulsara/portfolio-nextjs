@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     default: "Methmin Pulsara | Full-Stack Developer",
     template: "%s | Methmin Pulsara",
   },
+  verification: {
+    google: "2JKrfWhlbAaMo956FOxMllHzhhUjqEM4yfIU7VGKHpo", 
+  },
   description: "Official portfolio of Methmin Pulsara, a passionate Full-Stack Developer specializing in modern web technologies and high-performance applications.",
   keywords: ["Methmin Pulsara", "Methmin", "Full Stack Developer", "Software Engineer Sri Lanka", "Next.js Portfolio"],
   authors: [{ name: "Methmin Pulsara" }],
