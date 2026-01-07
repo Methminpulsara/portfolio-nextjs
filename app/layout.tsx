@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Methmin Pulsara",
     images: [
       {
-        url: "/assets/linkdin-profile.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Methmin Pulsara Portfolio Preview",
@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Methmin Pulsara | Full-Stack Developer",
     description: "Passionate Full-Stack Developer specializing in React, Next.js, and Node.js.",
+    creator: "@your_twitter_handle", 
+    images: ["/og-image.png"], 
   },
 
   icons: {
