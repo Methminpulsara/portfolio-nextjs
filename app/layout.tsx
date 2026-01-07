@@ -5,7 +5,6 @@ import SmoothScrollProvider from "@/hooks/SmoothScrollProvider";
 ;
 
 export const metadata: Metadata = {
-  // Google Search results wala pennana title eka
   title: {
     default: "Methmin Pulsara | Full-Stack Developer",
     template: "%s | Methmin Pulsara",
