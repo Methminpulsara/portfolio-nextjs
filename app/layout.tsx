@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://portfolio-methminpulsara.vercel.app"),
 
   openGraph: {
-    title: "Methmin Pulsara | Full-Stack Developer Portfolio",
+    title: "Methmin Pulsara | Full-Stack Developer ",
     description: "Check out my latest projects and skills in modern web development.",
     url: "https://portfolio-methminpulsara.vercel.app",
     siteName: "Methmin Pulsara",
